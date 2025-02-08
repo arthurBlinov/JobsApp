@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main 
+      - main  
 
 jobs:
   deploy:
@@ -22,14 +22,16 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Project
-        run: npm run build 
+      - name: Install Heroku CLI 
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku --version
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "jobs-app-2025"  
+          heroku_app_name: "jobs-app-2025" 
           heroku_email: "blinov.arthur2020@gmail.com"
           usedocker: false
 
@@ -38,4 +40,3 @@ jobs:
           GOOGLE_API_CONFIG_JSON: ${{ secrets.GOOGLE_API_CONFIG_JSON }}
         run: |
           heroku config:set GOOGLE_API_CONFIG_JSON="$GOOGLE_API_CONFIG_JSON" jobs-app-2025
-
