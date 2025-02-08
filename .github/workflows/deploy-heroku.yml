@@ -46,4 +46,4 @@ jobs:
         run: |
           heroku config:set GOOGLE_API_CONFIG_JSON:"$GOOGLE_API_CONFIG_JSON" SENDGRID_API_KEY="$SENDGRID_API_KEY" OPENAI_API_KEY="$OPENAI_API_KEY" --app jobs-app-2025
           heroku config:set CONTAINER_AUTHORIZATION_TOKEN="$CONTAINER_AUTHORIZATION_TOKEN" JWT_KEY="$JWT_KEY" MONGO_URI="$MONGO_URI" --app jobs-app-2025 
-          heroku config:set GOOGLE_API_CONFIG_JSON="$GOOGLE_API_CONFIG_JSON" --app jobs-app-2025
+          echo "$GOOGLE_API_CONFIG_JSON" | heroku config:set GOOGLE_API_CONFIG_JSON="$(cat)" --app your-heroku-app-name
