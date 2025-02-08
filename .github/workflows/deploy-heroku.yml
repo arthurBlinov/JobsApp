@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   deploy:
@@ -17,13 +17,15 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18  
+          node-version: 18 
 
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Project
-        run: npm run build  
+      - name: Install Heroku CLI  
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku --version
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
@@ -36,5 +38,8 @@ jobs:
       - name: Set Google API Config on Heroku
         env:
           GOOGLE_API_CONFIG_JSON: ${{ secrets.GOOGLE_API_CONFIG_JSON }}
+        run: |
+          heroku config:set GOOGLE_API_CONFIG_JSON="$GOOGLE_API_CONFIG_JSON" --app your-heroku-app-name
+
         run: |
           heroku config:set GOOGLE_API_CONFIG_JSON="$GOOGLE_API_CONFIG_JSON" --app your-heroku-app-name
