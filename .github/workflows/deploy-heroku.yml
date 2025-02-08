@@ -29,7 +29,7 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "jobs-app-2025"  # Replace with your actual Heroku app name
+          heroku_app_name: "jobs-app-2025"  
           heroku_email: "blinov.arthur2020@gmail.com"
           usedocker: false
 
