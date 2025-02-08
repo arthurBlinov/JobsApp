@@ -12,6 +12,8 @@ import { SpeechClient, protos } from '@google-cloud/speech';
 import { WebSocket } from "ws";
 import http from 'http';
 import aiRoute from "./route/AI";
+import * as fs from "fs";
+import * as path from "path";
 const app = express();
 
 const server = http.createServer(app);
@@ -29,14 +31,18 @@ app.use('/company', companyRoute);
 app.use('/jobs', jobsRoute);
 app.use('/ai', aiRoute);
 
-
-
 const wss = new WebSocket.Server({ server, path: '/connection' });
-const speechClient = new SpeechClient({
-  keyFilename: './key-jobsapp.json', 
-});
+const googleCredentials = process.env.GOOGLE_API_CONFIG_JSON;
+const credentialPath = "/app/config/google-api-config.json";
 
-
+if (googleCredentials) {
+  fs.mkdirSync(path.dirname(credentialPath), { recursive: true });
+  fs.writeFileSync(credentialPath, googleCredentials);
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialPath;
+} else {
+  process.exit(1);
+}
+const speechClient = new SpeechClient();
 
 wss.on('connection', (ws) => {
   let recognizeStream: any;
