@@ -37,6 +37,11 @@ jobs:
           
       - name: Set Google API Config on Heroku
         env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+          CONTAINER_AUTHORIZATION_TOKEN: ${{ secrets.CONTAINER_AUTHORIZATION_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPEN_API_KEY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           GOOGLE_API_CONFIG_JSON: ${{ secrets.GOOGLE_API_CONFIG_JSON }}
         run: |
-          heroku config:set GOOGLE_API_CONFIG_JSON="$GOOGLE_API_CONFIG_JSON" --app jobs-app-2025
+          heroku config:set GOOGLE_API_CONFIG_JSON:"$GOOGLE_API_CONFIG_JSON" SENDGRID_API_KEY="$SENDGRID_API_KEY" OPENAI_API_KEY="$OPENAI_API_KEY" CONTAINER_AUTHORIZATION_TOKEN="$CONTAINER_AUTHORIZATION_TOKEN" JWT_KEY="$JWT_KEY" MONGO_URI="$MONGO_URI" GOOGLE_API_CONFIG_JSON="$GOOGLE_API_CONFIG_JSON" --app jobs-app-2025
