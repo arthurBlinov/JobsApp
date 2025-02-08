@@ -1,0 +1,50 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    name: Deploy to Heroku
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18  
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Install Heroku CLI 
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          heroku --version
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "jobs-app-2025" 
+          heroku_email: "blinov.arthur2020@gmail.com"
+          usedocker: false
+          
+      - name: Set Google API Config on Heroku
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          JWT_KEY: ${{ secrets.JWT_KEY }}
+          CONTAINER_AUTHORIZATION_TOKEN: ${{ secrets.CONTAINER_AUTHORIZATION_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPEN_API_KEY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          GOOGLE_API_CONFIG_JSON: ${{ secrets.GOOGLE_API_CONFIG_JSON }}
+        run: |
+          heroku config:set GOOGLE_API_CONFIG_JSON:"$GOOGLE_API_CONFIG_JSON" SENDGRID_API_KEY="$SENDGRID_API_KEY" OPENAI_API_KEY="$OPENAI_API_KEY" --app jobs-app-2025
+          heroku config:set CONTAINER_AUTHORIZATION_TOKEN="$CONTAINER_AUTHORIZATION_TOKEN" JWT_KEY="$JWT_KEY" MONGO_URI="$MONGO_URI" --app jobs-app-2025 
+          echo "$GOOGLE_API_CONFIG_JSON" > google_api.json
+          heroku config:set GOOGLE_API_CONFIG_JSON="$(cat google_api.json)" --app jobs-app-2025
